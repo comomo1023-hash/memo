@@ -1,377 +1,389 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Figmaから始めるWebサイト移行・機能比較完全ガイド</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        figma: '#F24E1E',
-                        framer: '#0055FF',
-                        studio: '#FF385C',
-                        wix: '#000000',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Webサイト構成 比較メモ</title>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+        "Hiragino Sans", sans-serif;
+      line-height: 1.8;
+      color: #222;
+      background: #f6f7f8;
+      margin: 0;
+      padding: 40px 16px;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-top: 0;
+      line-height: 1.3;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.4rem;
+      border-left: 6px solid #444;
+      padding-left: 12px;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: #555;
+    }
+
+    .toc {
+      background: #f0f4f8;
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .toc ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .summary-table,
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    .summary-table th,
+    .summary-table td,
+    .compare-table th,
+    .compare-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      vertical-align: top;
+    }
+
+    .summary-table th,
+    .compare-table th {
+      background: #f3f3f3;
+      text-align: left;
+    }
+
+    .important {
+      background: #fff8e8;
+      border: 1px solid #f0d48c;
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #ececec;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    .recommend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .recommend-box {
+      background: #fafafa;
+      border: 1px solid #e3e3e3;
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .recommend-box ul {
+      padding-left: 18px;
+      margin-bottom: 0;
+    }
+
+    .emoji-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 22px;
+      }
+
+      table {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen">
 
-    <!-- Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="bg-gradient-to-tr from-figma via-studio to-framer p-2 rounded-xl text-white font-bold tracking-wider text-sm shadow-md">
-                    F ➔ Web
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg text-slate-900">Figmaから始めるWebサイト移行ガイド</h1>
-                    <p class="text-xs text-slate-500">Wixからの移行検討・仕組みと総合機能比較表</p>
-                </div>
-            </div>
-            
-            <!-- Navigation Steps -->
-            <div class="flex gap-1 bg-slate-100 p-1 rounded-lg text-xs w-full md:w-auto overflow-x-auto">
-                <button onclick="switchStep('step1')" id="btn-step1" class="step-btn flex-none px-3 py-1.5 rounded-md font-medium transition-all bg-white text-slate-900 shadow-sm">
-                    1. サーバーとFigmaの超基本
-                </button>
-                <button onclick="switchStep('step2')" id="btn-step2" class="step-btn flex-none px-3 py-1.5 rounded-md font-medium transition-all text-slate-500 hover:text-slate-900">
-                    2. Figma Sitesと社内の壁
-                </button>
-                <button onclick="switchStep('step3')" id="btn-step3" class="step-btn flex-none px-3 py-1.5 rounded-md font-medium transition-all text-slate-500 hover:text-slate-900">
-                    3. STUDIO・Framerという選択肢
-                </button>
-                <button onclick="switchStep('step4')" id="btn-step4" class="step-btn flex-none px-3 py-1.5 rounded-md font-medium transition-all text-slate-500 hover:text-slate-900">
-                    4. 総合機能・セキュリティ比較表
-                </button>
-            </div>
+<body>
+  <div class="container">
+
+    <div class="card">
+      <h1>Webサイト構成 比較メモ</h1>
+
+      <p class="lead">
+        Figma Sites / STUDIO / Framer / Wix の違いや、
+        「結局どれが現実的なの？」を整理したメモです。
+      </p>
+
+      <div class="toc">
+        <strong>📍 このページの見方</strong>
+        <ul>
+          <li>とりあえず結論 → Step4</li>
+          <li>Figma Sitesの制約だけ知りたい → Step2</li>
+          <li>Webの仕組みが不安 → Step1</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>まず3行で結論</h2>
+
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>やりたいこと</th>
+            <th>おすすめ</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>日本語で安心運用したい</td>
+            <td><strong>STUDIO</strong></td>
+          </tr>
+
+          <tr>
+            <td>Figma再現度を重視したい</td>
+            <td><strong>Framer</strong></td>
+          </tr>
+
+          <tr>
+            <td>ログイン管理を楽にしたい</td>
+            <td><strong>Wix継続</strong></td>
+          </tr>
+
+          <tr>
+            <td>Figmaだけで完結したい</td>
+            <td><strong>Figma Sites</strong>（制約あり）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Step1. なぜFigmaだけでは公開できないの？</h2>
+
+      <p>
+        Webサイトは「デザインを作る」だけでは公開できません。
+      </p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Web用語</th>
+            <th>家づくりで例えると</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>ドメイン</td>
+            <td>住所</td>
+          </tr>
+
+          <tr>
+            <td>サーバー</td>
+            <td>土地</td>
+          </tr>
+
+          <tr>
+            <td>Figma</td>
+            <td>設計図</td>
+          </tr>
+
+          <tr>
+            <td>STUDIO / Framer</td>
+            <td>工務店</td>
+          </tr>
+
+          <tr>
+            <td>公開されたサイト</td>
+            <td>完成した家</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top: 20px;">
+        Figmaは非常に優秀な「設計図ツール」ですが、
+        単体では“公開されたWebサイト”にはなりません。
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Step2. Figma Sitesで直接公開すると何が起きる？</h2>
+
+      <div class="important">
+        <strong>🔒 社内サイト運用で超重要</strong>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>要件</th>
+              <th>Wix</th>
+              <th>STUDIO</th>
+              <th>Framer</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>退職者だけ削除できる</td>
+              <td>⭕</td>
+              <td>❌</td>
+              <td>△</td>
+            </tr>
+
+            <tr>
+              <td>Googleログイン</td>
+              <td>△</td>
+              <td>❌</td>
+              <td>△</td>
+            </tr>
+
+            <tr>
+              <td>共通パスワード</td>
+              <td>⭕</td>
+              <td>⭕</td>
+              <td>⭕</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-top:20px;">
+        Figma Sitesはかなり魅力的ですが、
+        現時点では「運用面」にまだクセがあります。
+      </p>
+
+      <div>
+        <span class="tag">デザイン再現度高い</span>
+        <span class="tag">公開が速い</span>
+        <span class="tag">運用機能は弱め</span>
+        <span class="tag">権限管理は注意</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Step3. 実務では何を使う？</h2>
+
+      <div class="recommend-grid">
+
+        <div class="recommend-box">
+          <h3>🪴 STUDIO向き</h3>
+
+          <ul>
+            <li>日本語UIで安心したい</li>
+            <li>非エンジニア運用</li>
+            <li>まず安全に進めたい</li>
+          </ul>
         </div>
-    </header>
 
-    <main class="max-w-5xl mx-auto px-4 py-8">
+        <div class="recommend-box">
+          <h3>🎨 Framer向き</h3>
 
-        <!-- STEP 1: サーバーとFigmaの超基本 -->
-        <section id="content-step1" class="step-content block space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-1">Step 1. 基礎知識</span>
-                <h2 class="text-xl font-bold mb-4 text-slate-900 flex items-center gap-2">
-                    ドメイン・サーバー・Figmaってどういう関係？
-                </h2>
-                <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                    Wixのような一体型ツールから移行する前に、まずは「インターネット上にWebサイトを公開する仕組み」をライトに整理してみましょう。よく<strong>家づくり</strong>に例えられます。
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                    <div class="bg-amber-50/60 p-5 rounded-xl border border-amber-200 flex flex-col justify-between">
-                        <div>
-                            <div class="text-amber-600 font-bold text-xs mb-1">① 独自ドメイン</div>
-                            <h3 class="text-slate-950 font-bold text-base mb-2">📌 住所・表札</h3>
-                            <p class="text-[11px] text-slate-600 leading-relaxed">
-                                <code class="bg-amber-100 px-1 py-0.5 rounded text-amber-800">example.com</code> のようなサイトの宛先。<br>ドメイン管理会社で取得・維持します。
-                            </p>
-                        </div>
-                    </div>
-                    <div class="bg-emerald-50/60 p-5 rounded-xl border border-emerald-200 flex flex-col justify-between">
-                        <div>
-                            <div class="text-emerald-600 font-bold text-xs mb-1">② サーバー</div>
-                            <h3 class="text-slate-950 font-bold text-base mb-2">🗺️ 土地</h3>
-                            <p class="text-[11px] text-slate-600 leading-relaxed">
-                                サイトの画像や文字データを置いておく場所。<br><strong>Figma SitesやSTUDIO、Framerは「土地（サーバー）」が最初からセット</strong>でついてきます。
-                            </p>
-                        </div>
-                    </div>
-                    <div class="bg-violet-50/60 p-5 rounded-xl border border-violet-200 flex flex-col justify-between">
-                        <div>
-                            <div class="text-violet-600 font-bold text-xs mb-1">③ Figma (フィグマ)</div>
-                            <h3 class="text-slate-950 font-bold text-base mb-2">📐 理想の設計図</h3>
-                            <p class="text-[11px] text-slate-600 leading-relaxed">
-                                画面のビジュアルを作るデザインツール。直感的ですが、基本は設計図なのでこれ単体では動きません。
-                            </p>
-                        </div>
-                    </div>
-                    <div class="bg-blue-50/60 p-5 rounded-xl border border-blue-200 flex flex-col justify-between">
-                        <div>
-                            <div class="text-blue-600 font-bold text-xs mb-1">④ FigmaSites / STUDIO / Framer</div>
-                            <h3 class="text-slate-950 font-bold text-base mb-2">🏗️ 優秀な大工</h3>
-                            <p class="text-[11px] text-slate-600 leading-relaxed">
-                                Figmaの「設計図」を読み込んで、自前の「強い土地」の上にサクサク動くWebサイトを建ててくれる構築ツールです。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8 pt-6 border-t border-slate-200 flex justify-end">
-                    <button onclick="switchStep('step2')" class="bg-figma hover:bg-figma/90 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition-all flex items-center gap-2 shadow-md">
-                        2. Figma Sites の特徴と社内運用の壁 ➔
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- STEP 2: Figma Sites と社内の壁 -->
-        <section id="content-step2" class="step-content hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                <span class="text-xs font-bold text-figma uppercase tracking-wider block mb-1">Step 2. ツール検証</span>
-                <h2 class="text-xl font-bold mb-4 text-slate-900">
-                    Figmaで作って「直接公開（Figma Sites）」する場合の仕組みと注意点
-                </h2>
-                <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                    Figmaには、作ったデザインをそのままWebサイトとして公開できる機能（Figma Sites）があります。手軽ですが、<strong>社内限定サイト</strong>として運用を考えた場合、いくつかの壁にぶつかることがあります。
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div class="p-5 rounded-xl border border-emerald-100 bg-emerald-50/20 text-xs">
-                        <span class="font-bold text-emerald-800 text-sm block mb-2">⭕ Figma Sitesのメリット</span>
-                        <ul class="list-disc list-inside space-y-2 text-slate-700">
-                            <li><strong>とにかくラク：</strong> 別ツールへのインポートが必要なく、Figma内のボタン1つで公開。</li>
-                            <li><strong>修正が即座に反映：</strong> Figmaでデザインを変更すれば、即時にサイトに反映されます。</li>
-                            <li><strong>サーバーが超強力：</strong> モンスターインフラを使用するため、表示が爆速です。</li>
-                        </ul>
-                    </div>
-
-                    <div class="p-5 rounded-xl border border-rose-100 bg-rose-50/20 text-xs">
-                        <span class="font-bold text-rose-800 text-sm block mb-2">⚠️ 社内運用でぶつかるセキュリティの壁</span>
-                        <ul class="list-disc list-inside space-y-2 text-slate-700">
-                            <li><strong>社員限定公開（SSO）が高額：</strong> 「会社のGoogleアカウントでログイン」は、全社で最上位プランを契約していないと使えません。</li>
-                            <li><strong>共通パスワードの退職者リスク：</strong> 「全員共通パスワード」は可能ですが、社員退職時に手動で変更し全社員に連絡し直す泥臭い運用が必要です。</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="mt-8 pt-6 border-t border-slate-200 flex justify-between items-center">
-                    <button onclick="switchStep('step1')" class="text-slate-500 hover:text-slate-800 text-sm font-bold">⬅ Step 1 に戻る</button>
-                    <button onclick="switchStep('step3')" class="bg-figma hover:bg-figma/90 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition-all flex items-center gap-2 shadow-md">
-                        3. 「STUDIO」「Framer」という別の選択肢 ➔
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- STEP 3: STUDIO・Framerという選択肢 -->
-        <section id="content-step3" class="step-content hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-1">Step 3. 代替案</span>
-                <h2 class="text-xl font-bold mb-4 text-slate-900">
-                    「デザインはFigma、公開と運営はノーコードツールに任せる」という新常識
-                </h2>
-                <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                    デザイン作業はFigmaで行い、<strong>Figmaのプラグインを使ってワンクリックで他のノーコードツールにコピペし、そこで公開する</strong>フローがプロの間でも主流になっています。
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div class="p-5 rounded-xl border border-studio/20 bg-studio/5 flex flex-col justify-between">
-                        <div>
-                            <span class="bg-studio text-white text-[10px] font-bold px-2 py-0.5 rounded mb-2 inline-block">選択肢 A（最も手堅い）</span>
-                            <h3 class="font-bold text-lg text-slate-900 mb-2">STUDIO (スタジオ)</h3>
-                            <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside mb-4">
-                                <li><strong>完全日本語：</strong> 操作もサポートも日本語で安心。</li>
-                                <li><strong>CMSが使いやすい：</strong> 日本製ならではの直感的なブログ投稿画面。</li>
-                                <li><strong>共通パスワード：</strong> 有料プランでサイトに簡単にロック可能。</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="p-5 rounded-xl border border-framer/20 bg-framer/5 flex flex-col justify-between">
-                        <div>
-                            <span class="bg-framer text-white text-[10px] font-bold px-2 py-0.5 rounded mb-2 inline-block">選択肢 B（クオリティ重視）</span>
-                            <h3 class="font-bold text-lg text-slate-900 mb-2">Framer (フレーマー)</h3>
-                            <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside mb-4">
-                                <li><strong>完璧なコピペ移行力：</strong> Figmaで作ったレイアウトが100%移行。</li>
-                                <li><strong>リッチな表現力：</strong> 高度なアニメーション演出が可能。</li>
-                                <li><strong>外部サービス連携：</strong> 会員システム等を組み合わせ個人別ログインが構築可。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8 pt-6 border-t border-slate-200 flex justify-between items-center">
-                    <button onclick="switchStep('step2')" class="text-slate-500 hover:text-slate-800 text-sm font-bold">⬅ Step 2 に戻る</button>
-                    <button onclick="switchStep('step4')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition-all flex items-center gap-2 shadow-md">
-                        4. 総合機能・セキュリティ比較表 ➔
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- STEP 4: 総合機能・セキュリティ比較表 -->
-        <section id="content-step4" class="step-content hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-1">Step 4. 最終ジャッジ</span>
-                <h2 class="text-xl font-bold mb-4 text-slate-900">
-                    総合機能・セキュリティ要件 比較表
-                </h2>
-                <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                    基本機能から「絶対に外せないログイン方式」まで、各ツールの対応状況を一覧にしました。現状のWixと比較しながら最適な移行先を見つけてください。
-                </p>
-
-                <div class="overflow-x-auto rounded-lg border border-slate-200">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold">
-                                <th class="p-3 border-r border-slate-200 w-1/5">比較・要件項目</th>
-                                <th class="p-3 border-r border-slate-200 text-wix bg-slate-200/50 w-1/5">現状維持<br>Wix</th>
-                                <th class="p-3 border-r border-slate-200 text-figma bg-figma/5 w-1/5">直接公開<br>Figma Sites</th>
-                                <th class="p-3 border-r border-slate-200 text-studio bg-rose-50/30 w-1/5">完全日本語<br>STUDIO</th>
-                                <th class="p-3 text-framer bg-blue-50/30 w-1/5">デザイン最強<br>Framer</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-200 text-slate-700 bg-white">
-                            
-                            <!-- 基本機能ブロック -->
-                            <tr class="bg-slate-50/50">
-                                <td colspan="5" class="p-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200">基本機能・運用</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 border-r border-slate-200 font-bold bg-slate-50/30">Figmaデザインの移行</td>
-                                <td class="p-3 border-r border-slate-200 text-rose-600 font-bold">❌ 不可</td>
-                                <td class="p-3 border-r border-slate-200 text-emerald-600 font-bold">★ Figma内完結</td>
-                                <td class="p-3 border-r border-slate-200 text-emerald-600 font-bold">⭕ プラグイン移行</td>
-                                <td class="p-3 font-bold text-framer">★ 完璧なコピー移行</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 border-r border-slate-200 font-bold bg-slate-50/30">管理画面・サポート</td>
-                                <td class="p-3 border-r border-slate-200">日本語</td>
-                                <td class="p-3 border-r border-slate-200 text-slate-500">英語メイン</td>
-                                <td class="p-3 border-r border-slate-200 text-studio font-bold">★ 完全日本語</td>
-                                <td class="p-3 text-rose-600 font-bold">英語のみ</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 border-r border-slate-200 font-bold bg-slate-50/30">ブログ(CMS)の使いやすさ</td>
-                                <td class="p-3 border-r border-slate-200 text-emerald-600 font-bold">⭕ 良い</td>
-                                <td class="p-3 border-r border-slate-200">🔺 やや複雑</td>
-                                <td class="p-3 border-r border-slate-200 text-emerald-600 font-bold">★ 大変良い</td>
-                                <td class="p-3 text-emerald-600 font-bold">⭕ 良い（高機能）</td>
-                            </tr>
-
-                            <!-- セキュリティブロック -->
-                            <tr class="bg-amber-50/50">
-                                <td colspan="5" class="p-2 text-[10px] font-bold text-amber-700 uppercase tracking-widest border-b border-slate-200">社内サイト必須要件（セキュリティ・ログイン）</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 border-r border-slate-200 font-bold bg-slate-50/30">
-                                    共通パスワード<br><span class="font-normal text-[10px] text-slate-500">（定期的に手動変更で対応）</span>
-                                </td>
-                                <td class="p-3 border-r border-slate-200 text-emerald-600 font-bold">⭕ 対応</td>
-                                <td class="p-3 border-r border-slate-200 text-emerald-600 font-bold">⭕ 対応（有料）</td>
-                                <td class="p-3 border-r border-slate-200 text-emerald-600 font-bold bg-rose-50/10">⭕ 対応</td>
-                                <td class="p-3 text-emerald-600 font-bold bg-blue-50/10">⭕ 対応</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 border-r border-slate-200 font-bold bg-slate-50/30">
-                                    個人パスワード発行<br><span class="font-normal text-[10px] text-slate-500">（退職者を個別に即座に削除）</span>
-                                </td>
-                                <td class="p-3 border-r border-slate-200 text-emerald-600 font-bold">⭕ 対応（標準）</td>
-                                <td class="p-3 border-r border-slate-200 text-rose-600 font-bold">❌ 拡張不可</td>
-                                <td class="p-3 border-r border-slate-200 text-rose-600 font-bold bg-slate-50/30">❌ 拡張不得意</td>
-                                <td class="p-3 bg-blue-50/20">
-                                    <span class="text-framer font-bold block">💡 外部連携で対応</span>
-                                    <span class="text-[10px] text-slate-600">※Memberstack等(英語)を使用</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 border-r border-slate-200 font-bold bg-slate-50/30">
-                                    条件ありでSSO<br><span class="font-normal text-[10px] text-slate-500">（Google等で自動ログイン）</span>
-                                </td>
-                                <td class="p-3 border-r border-slate-200 text-rose-600 font-bold">❌ 非対応</td>
-                                <td class="p-3 border-r border-slate-200 bg-figma/5">
-                                    <span class="text-blue-600 font-bold">🔺 条件付き</span><br>
-                                    <span class="text-[10px] text-slate-600">※全社Enterprise契約のみ</span>
-                                </td>
-                                <td class="p-3 border-r border-slate-200 text-rose-600 font-bold">❌ 非対応</td>
-                                <td class="p-3 text-rose-600 font-bold">❌ 非対応</td>
-                            </tr>
-
-                            <!-- 費用ブロック -->
-                            <tr class="bg-slate-50/50">
-                                <td colspan="5" class="p-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200">コスト</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 border-r border-slate-200 font-bold bg-slate-50/30">目安の最低維持費<br><span class="font-normal text-[10px] text-slate-500">（※年払時の月額目安）</span></td>
-                                <td class="p-3 border-r border-slate-200 font-bold text-slate-800">¥1,000〜3,000前後</td>
-                                <td class="p-3 border-r border-slate-200 font-bold text-slate-800">Figma契約費のみ</td>
-                                <td class="p-3 border-r border-slate-200 font-bold text-slate-800">¥2,480 / 月</td>
-                                <td class="p-3 font-bold text-slate-800">約 $10 / 月〜<br><span class="text-[10px] font-normal text-slate-500">※外部連携時は+$25程</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- 結論アドバイス -->
-                <div class="mt-6 p-5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
-                    <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
-                        <span class="bg-slate-900 text-white px-2 py-0.5 rounded text-[10px]">結論</span> 
-                        どのルートを選ぶべきか？
-                    </h4>
-                    <ul class="space-y-3 text-slate-700">
-                        <li class="flex gap-2">
-                            <span class="text-framer font-bold">▶</span>
-                            <div>
-                                <strong>「個人パス（退職者対策）」と「Figmaデザイン」の両方を絶対に妥協できない場合：</strong><br>
-                                画面が英語になるハードルを越えてでも、<span class="font-bold text-framer">Framer ＋ 外部連携</span> のルートへ進むのが唯一の解決策です。
-                            </div>
-                        </li>
-                        <li class="flex gap-2">
-                            <span class="text-studio font-bold">▶</span>
-                            <div>
-                                <strong>「日本語の安心感」と「Figmaデザイン」を優先する場合：</strong><br>
-                                個人パスは諦めて「共通パスを定期的に手動更新する運用」で割り切り、完全日本語の<span class="font-bold text-studio">STUDIO</span>で公開するのが最も安全・確実です。
-                            </div>
-                        </li>
-                        <li class="flex gap-2">
-                            <span class="text-wix font-bold">▶</span>
-                            <div>
-                                <strong>「個人パスも、日本語も、手間ゼロ」をすべて満たしたい場合：</strong><br>
-                                実は<span class="font-bold text-wix">今のWix</span>が最も条件を満たしています。移行による運用リスクを避けたい場合は、Wixのままデザインだけを頑張ってリニューアルするのも立派な正解です。
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
-        <div class="max-w-5xl mx-auto px-4 text-center text-xs text-slate-400 font-medium">
-            Figma Sites & No-Code Transition Decision Tool • 2026
+          <ul>
+            <li>Figma再現度を重視</li>
+            <li>表現力がほしい</li>
+            <li>英語UIでもいける</li>
+          </ul>
         </div>
-    </footer>
 
-    <script>
-        function switchStep(stepId) {
-            document.querySelectorAll('.step-content').forEach(content => {
-                content.classList.add('hidden');
-                content.classList.remove('block');
-            });
-            document.getElementById(`content-${stepId}`).classList.remove('hidden');
-            document.getElementById(`content-${stepId}`).classList.add('block');
+        <div class="recommend-box">
+          <h3>🏢 Wix継続向き</h3>
 
-            document.querySelectorAll('.step-btn').forEach(btn => {
-                btn.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
-                btn.classList.add('text-slate-500', 'hover:text-slate-900');
-            });
-            const activeBtn = document.getElementById(`btn-${stepId}`);
-            activeBtn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-            activeBtn.classList.remove('text-slate-500', 'hover:text-slate-900');
-        }
+          <ul>
+            <li>ログイン管理を重視</li>
+            <li>運用を安定させたい</li>
+            <li>権限管理が重要</li>
+          </ul>
+        </div>
 
-        // 初期表示をStep 4にする場合は以下をコメントアウト解除
-        // window.onload = function() {
-        //     switchStep('step4');
-        // }
-    </script>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Step4. 結局どれを選ぶべき？</h2>
+
+      <p>
+        現実的には、
+        「何を重視するか」で答えが変わります。
+      </p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>重視したいこと</th>
+            <th>おすすめ</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>安心運用</td>
+            <td>STUDIO / Wix</td>
+          </tr>
+
+          <tr>
+            <td>デザイン表現</td>
+            <td>Framer</td>
+          </tr>
+
+          <tr>
+            <td>Figma完結</td>
+            <td>Figma Sites</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top: 24px;">
+        ツール選定は「最強ツール探し」というより、
+        “誰が運用するか”との相性選びに近いです。
+      </p>
+
+      <p>
+        Web制作って、
+        意外と「機能」より「日々の運用」が支配する世界なので…🌱
+      </p>
+    </div>
+
+  </div>
 </body>
 </html>
